@@ -1,26 +1,37 @@
 <script setup lang="ts">
-import Versions from './components/Versions.vue'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 
-const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+// const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 </script>
 
 <template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
-  <div class="creator">Powered by electron-vite</div>
-  <div class="text">
-    Build an Electron app with
-    <span class="vue">Vue</span>
-    and
-    <span class="ts">TypeScript</span>
-  </div>
-  <p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
-  <div class="actions">
-    <div class="action">
-      <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-    </div>
-    <div class="action">
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
-  </div>
-  <Versions />
+  <splitpanes class="default-theme">
+    <pane class="pane-dashboard" >
+      <span style="color: blue; align-self: center">大盘窗口</span>
+    </pane>
+    <pane class="pane-agent" min-size="20" max-size="30">
+      <span style="color: blue; align-self: center">Agentic对话窗口</span>
+    </pane>
+  </splitpanes>
 </template>
+
+<style lang="scss" scoped>
+
+.splitpanes {
+  width: 100vw;
+  height: 100vh;
+}
+
+.pane-dashboard {
+  background-color: #df8484 !important;
+  display: flex;
+  justify-content: center;
+}
+
+.pane-agent {
+  background-color: beige !important;
+  display: flex;
+  justify-content: center;
+}
+</style>
