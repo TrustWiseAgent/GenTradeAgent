@@ -1,0 +1,1 @@
+# Agentic GenAI based Trade Agent
