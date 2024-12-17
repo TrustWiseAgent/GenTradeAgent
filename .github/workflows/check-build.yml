@@ -1,0 +1,28 @@
+name: Check Build
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    paths:
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.vue'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: |
+          cd src/GenTradeAgent
+          npm install
+          npm run build
