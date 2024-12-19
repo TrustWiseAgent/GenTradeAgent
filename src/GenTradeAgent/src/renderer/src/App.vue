@@ -14,13 +14,16 @@ import 'splitpanes/dist/splitpanes.css'
       <span style="color: blue; align-self: center">Agentic对话窗口</span>
     </pane>
   </splitpanes>
+  <div class="footbar">
+    <span style="color: blue; align-self: center">工具栏</span>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 
 .splitpanes {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 30px);
 }
 
 .pane-dashboard {
@@ -33,5 +36,15 @@ import 'splitpanes/dist/splitpanes.css'
   background-color: beige !important;
   display: flex;
   justify-content: center;
+}
+
+.footbar {
+  height: 30px;
+  width: 100vw;
+  background-color: #F3F3F3;
+  display: flex;
+  justify-content: center;
+  border: 2px;
+  border-color: aquamarine;
 }
 </style>
