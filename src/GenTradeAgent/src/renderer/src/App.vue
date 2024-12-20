@@ -1,50 +1,35 @@
 <script setup lang="ts">
-import { Splitpanes, Pane } from 'splitpanes'
-import 'splitpanes/dist/splitpanes.css'
+import TradingMain from './components/TradingMain.vue';
+import StatusBar from './components/StatusBar.vue';
 
 // const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 </script>
 
 <template>
-  <splitpanes class="default-theme">
-    <pane class="pane-dashboard" >
-      <span style="color: blue; align-self: center">大盘窗口</span>
-    </pane>
-    <pane class="pane-agent" min-size="20" max-size="30">
-      <span style="color: blue; align-self: center">Agentic对话窗口</span>
-    </pane>
-  </splitpanes>
-  <div class="footbar">
-    <span style="color: blue; align-self: center">工具栏</span>
+  <div class="app-main">
+    <TradingMain class="app-trading" />
+    <StatusBar class="app-status" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-
-.splitpanes {
+.app-main {
+  height: 100vh;
   width: 100vw;
-  height: calc(100vh - 30px);
+  display: flex;
+  flex-direction: column;
 }
 
-.pane-dashboard {
-  background-color: #df8484 !important;
-  display: flex;
-  justify-content: center;
+.app-trading {
+  flex-grow: 1;
+  border: #e5e5e5;
+  border-style: solid;
+  border-width: thin;
+  background: #f3f3f3;
 }
 
-.pane-agent {
-  background-color: beige !important;
-  display: flex;
-  justify-content: center;
-}
-
-.footbar {
-  height: 30px;
-  width: 100vw;
-  background-color: #F3F3F3;
-  display: flex;
-  justify-content: center;
-  border: 2px;
-  border-color: aquamarine;
+.app-status {
+  height: 35px;
+  background: #f3f3f3;
 }
 </style>
