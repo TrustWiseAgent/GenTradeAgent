@@ -1,26 +1,35 @@
 <script setup lang="ts">
-import Versions from './components/Versions.vue'
+import TradingMain from './components/TradingMain.vue';
+import StatusBar from './components/StatusBar.vue';
 
-const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+// const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 </script>
 
 <template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
-  <div class="creator">Powered by electron-vite</div>
-  <div class="text">
-    Build an Electron app with
-    <span class="vue">Vue</span>
-    and
-    <span class="ts">TypeScript</span>
+  <div class="app-main">
+    <TradingMain class="app-trading" />
+    <StatusBar class="app-status" />
   </div>
-  <p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
-  <div class="actions">
-    <div class="action">
-      <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-    </div>
-    <div class="action">
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
-  </div>
-  <Versions />
 </template>
+
+<style lang="scss" scoped>
+.app-main {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-trading {
+  flex-grow: 1;
+  border: #e5e5e5;
+  border-style: solid;
+  border-width: thin;
+  background: #f3f3f3;
+}
+
+.app-status {
+  height: 35px;
+  background: #f3f3f3;
+}
+</style>
