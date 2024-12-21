@@ -1,3 +1,4 @@
+
 <template>
   <div class="status-main">
     <div class="status-notification">
@@ -13,7 +14,6 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  font-size: 14px;
 }
 
 .status-notification {
