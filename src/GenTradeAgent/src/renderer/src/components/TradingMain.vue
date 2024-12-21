@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { Splitpanes, Pane } from 'splitpanes'
+import TradingDashboard  from './TradingDashboard.vue'
 import 'splitpanes/dist/splitpanes.css'
+import TradingChatAgent from './TradingChatAgent.vue';
+
 </script>
 
 <template>
   <splitpanes class="default-theme">
     <pane class="pane-dashboard">
-      <span style="color: blue; align-self: center">Trading Dashboard</span>
+      <TradingDashboard />
     </pane>
     <pane class="pane-agent" min-size="20" max-size="30">
-      <span style="color: blue; align-self: center">Agentic Dialog</span>
+      <TradingChatAgent/>
     </pane>
   </splitpanes>
 </template>
@@ -21,7 +24,7 @@ import 'splitpanes/dist/splitpanes.css'
 }
 
 .pane-dashboard {
-  background-color: #f3f3f3 !important;
+  background-color: #f3f300 !important;
   display: flex;
   justify-content: center;
 }

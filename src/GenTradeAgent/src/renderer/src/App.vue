@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TradingMain from './components/TradingMain.vue';
-import StatusBar from './components/StatusBar.vue';
-
+import TradingMain from './components/TradingMain.vue'
+import StatusBar from './components/StatusBar.vue'
+import 'vfonts/Lato.css'
 // const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 </script>
 
@@ -29,7 +29,7 @@ import StatusBar from './components/StatusBar.vue';
 }
 
 .app-status {
-  height: 35px;
+  height: 30px;
   background: #f3f3f3;
 }
 </style>
