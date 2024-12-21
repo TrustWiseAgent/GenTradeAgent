@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { NInput, NLog } from 'naive-ui'
 
 const placeholder_output = ref(`Response for Agentic GenTrade Server:
@@ -35,6 +35,15 @@ alongside inherent risks. As the cryptocurrency market evolves, Bitcoin remains 
 adoption and acceptance of digital assets worldwide.`)
 
 const prompt = ref('')
+
+onMounted(() => {
+  window.electron.ipcRenderer.invoke('getCryptoAssets').then((response) => {
+    console.log(response)
+    console.log(Object.keys(response))
+    //placeholder_output.value = Object.keys(response).toString
+    placeholder_output.value = JSON.stringify(response)
+  })
+})
 </script>
 
 <style lang="scss" scoped>

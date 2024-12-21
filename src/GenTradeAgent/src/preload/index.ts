@@ -20,3 +20,8 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api
 }
+
+const loadCache = () => {
+  electronAPI.ipcRenderer.send('loadCache', [])
+}
+loadCache()
