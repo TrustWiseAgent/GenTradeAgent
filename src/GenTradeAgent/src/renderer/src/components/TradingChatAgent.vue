@@ -38,16 +38,21 @@ export default defineComponent({
   },
   data() {
     return {
-      placeholder_output: `
-Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized digital currency that enables peer-to-peer transactions without the need for intermediaries like banks. Its creation marked the beginning of the cryptocurrency era, offering an alternative to traditional financial systems.
-The global Bitcoin market has experienced significant growth since its inception. In 2021, the market size was valued at approximately USD 17.05 billion, with projections indicating a compound annual growth rate (CAGR) of 26.2% from 2022 to 2030.
-GRAND VIEW RESEARCH
-As of December 20, 2024, Bitcoin's price is approximately $97,568.49 USD, with a 24-hour trading volume of around $95.98 billion USD. The circulating supply is about 19.8 million BTC, nearing its maximum supply limit of 21 million coins.
-COINMARKETCAP
-Bitcoin's price has been highly volatile throughout its history. Notably, it surpassed $100,000 for the first time on December 5, 2024.
-WIKIPEDIA
-This volatility is influenced by various factors, including regulatory developments, macroeconomic trends, and technological advancements within the cryptocurrency ecosystem.
-Investors and analysts continue to monitor Bitcoin's performance closely, considering its potential for high returns alongside inherent risks. As the cryptocurrency market evolves, Bitcoin remains a central figure, influencing the broader adoption and acceptance of digital assets worldwide.`,
+      placeholder_output: `Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
+digital currency that enables peer-to-peer transactions without the need for intermediaries like banks. Its creation marked \
+the beginning of the cryptocurrency era, offering an alternative to traditional financial systems.
+The global Bitcoin market has experienced significant growth since its inception.
+In 2021, the market size was valued at \
+approximately USD 17.05 billion, with projections indicating a compound annual growth rate (CAGR) of 26.2% from 2022 to 2030.
+As of December 20, 2024, Bitcoin's price is approximately $97,568.49 USD, with a 24-hour trading volume of around $95.98 \
+billion USD. The circulating supply is about 19.8 million BTC, nearing its maximum supply limit of 21 million coins.
+Bitcoin's price has been highly volatile throughout its history. Notably, it surpassed $100,000 for the first time on \
+December 5, 2024.
+This volatility is influenced by various factors, including regulatory developments, macroeconomic trends, and technological\
+advancements within the cryptocurrency ecosystem.
+Investors and analysts continue to monitor Bitcoin's performance closely, considering its potential for high returns \
+alongside inherent risks. As the cryptocurrency market evolves, Bitcoin remains a central figure, influencing the broader \
+adoption and acceptance of digital assets worldwide.`,
     }
   }
 })
@@ -56,22 +61,17 @@ Investors and analysts continue to monitor Bitcoin's performance closely, consid
 <style lang="scss" scoped>
 .chat-agent-all {
   width: 100%;
-  height: 100%;
-  padding: 4px;
   display: flex;
   flex-direction: column;
-
 }
 
 .chat-agent-input {
-  width: 100%;
   height: 60px;
   margin-top: 4px;
   font-size: 12px;
 }
 
 .chat-agent-output {
-  width: 100%;
   flex-grow: 1;
   font-size: 12px;
   color: black;

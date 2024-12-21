@@ -12,7 +12,7 @@ import TradingChatAgent from './TradingChatAgent.vue';
       <TradingDashboard />
     </pane>
     <pane class="pane-agent" min-size="20" max-size="30">
-      <TradingChatAgent/>
+      <TradingChatAgent />
     </pane>
   </splitpanes>
 </template>
@@ -24,14 +24,16 @@ import TradingChatAgent from './TradingChatAgent.vue';
 }
 
 .pane-dashboard {
-  background-color: #f3f300 !important;
+  background-color: #f3f3f3 !important;
   display: flex;
   justify-content: center;
+  padding: 4px;
 }
 
 .pane-agent {
   background-color: #f3f3f3 !important;
   display: flex;
-  justify-content: center;
+  padding: 4px;
 }
+
 </style>
