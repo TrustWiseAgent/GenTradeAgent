@@ -1,6 +1,5 @@
-# gentradeagent
+# GenTradeAgent
 
-An Electron application with Vue and TypeScript
 
 ## Recommended IDE Setup
 
