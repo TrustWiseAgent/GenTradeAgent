@@ -54,6 +54,7 @@ app.whenReady().then(() => {
   ipcMain.on('loadCache', () => store.init())
   ipcMain.handle('getCryptoAssets', () => store.getCryptoAssets())
   ipcMain.handle('getStockUSAssets', () => store.getStockUSAssets())
+  ipcMain.handle('getOhlcvBTC', () => store.getOhlcvBTC())
 
   createWindow()
 
