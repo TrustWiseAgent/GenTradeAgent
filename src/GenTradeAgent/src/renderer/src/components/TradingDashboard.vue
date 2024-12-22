@@ -21,8 +21,6 @@ const resizeHandler = () => {
   }
 }
 
-// const ipcHandle = () => window.electron.ipcRenderer.invoke('getCache')
-
 onMounted(() => {
   window.electron.ipcRenderer.invoke('getCryptoAssets').then((response) => {
     console.log(response)

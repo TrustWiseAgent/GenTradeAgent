@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { handlerGetCryptoAssets, handlerLoadCache } from './data'
+import { LocalStore } from './data'
 
 function createWindow(): void {
   // Create the browser window.
@@ -50,11 +50,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
-  ipcMain.on('loadCache', () => handlerLoadCache(join(app.getAppPath(), '../../data')))
-  ipcMain.handle('getCryptoAssets', () => handlerGetCryptoAssets())
+  const store = new LocalStore(join(app.getAppPath(), '../../data'))
+  ipcMain.on('loadCache', () => store.init())
+  ipcMain.handle('getCryptoAssets', () => store.getCryptoAssets())
+  ipcMain.handle('getStockUSAssets', () => store.getStockUSAssets())
 
   createWindow()
 

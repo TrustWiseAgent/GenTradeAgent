@@ -1,20 +1,34 @@
 //
 // Manage the local cache data
 //
-
 import { readFileSync } from 'fs'
 import { join } from 'path'
+export class LocalStore {
+  private rootDir: string
+  private cryptoAssets: object | null = null
+  private stockUSAssets: object | null = null
 
-let crypto_assets
+  public constructor(cacheDir: string) {
+    this.rootDir = cacheDir
+  }
 
-export function handlerLoadCache(cache_dir: string) {
-  console.log('Cache path: ' + cache_dir)
+  private loadJsonData(filePath: string): object {
+    const data = readFileSync(filePath, 'utf-8')
+    return JSON.parse(data)
+  }
 
-  const crypto_assets_data = readFileSync(join(cache_dir, 'Binance/crypto_assets.json'), 'utf-8')
-  crypto_assets = JSON.parse(crypto_assets_data)
-  return crypto_assets
-}
+  public init(): boolean {
+    this.cryptoAssets = this.loadJsonData(join(this.rootDir, 'Binance/crypto_assets.json'))
+    this.stockUSAssets = this.loadJsonData(join(this.rootDir, 'StockUS/stock_us_ticker.json'))
 
-export function handlerGetCryptoAssets() {
-  return crypto_assets
+    return true
+  }
+
+  public getCryptoAssets(): object | null {
+    return this.cryptoAssets
+  }
+
+  public getStockUSAssets(): object | null {
+    return this.stockUSAssets
+  }
 }
