@@ -1,7 +1,7 @@
 <template>
   <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
-    <n-log class="chat-agent-output" :log="placeholder_output" :line-height="1.1" />
+    <n-log class="chat-agent-output" :log="placeholder_output" :font-size="12"/>
     <n-input
       :value="prompt"
       class="chat-agent-input"
@@ -17,7 +17,7 @@
 import { ref } from 'vue'
 import { NInput, NLog } from 'naive-ui'
 
-const placeholder_output = ref(`
+const placeholder_output = ref(`Response for Agentic GenTrade Server:
 Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
 digital currency that enables peer-to-peer transactions without the need for intermediaries like banks. Its creation marked \
 the beginning of the cryptocurrency era, offering an alternative to traditional financial systems.
@@ -52,10 +52,10 @@ const prompt = ref('')
 
 .chat-agent-output {
   flex-grow: 1;
-  font-size: 12px;
   padding: 4px;
   border: #e5e5e5;
   border-style: solid;
   border-width: thin;
 }
+
 </style>
