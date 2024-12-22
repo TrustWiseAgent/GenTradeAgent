@@ -1,18 +1,11 @@
 <template>
   <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
+    <n-log class="chat-agent-output" :log="placeholder_output" :line-height="1.1" />
     <n-input
-      class="chat-agent-output"
-      v-model:value="output"
-      v-model:placeholder = 'placeholder_output'
-      type="textarea"
-      autosize
-      disabled
-    />
-    <n-input
+      :value="prompt"
       class="chat-agent-input"
       size="large"
-      v-model:value="prompt"
       type="textarea"
       placeholder="Prompt please show last 200 days bitcon prices"
       autosize
@@ -20,25 +13,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { NInput, NLog } from 'naive-ui'
 
-import { NInput } from 'naive-ui'
-
-export default defineComponent({
-  components: {
-    NInput
-  },
-  setup() {
-    return {
-      prompt: ref(''),
-      output: ref(''),
-
-    }
-  },
-  data() {
-    return {
-      placeholder_output: `Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
+const placeholder_output = ref(`
+Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
 digital currency that enables peer-to-peer transactions without the need for intermediaries like banks. Its creation marked \
 the beginning of the cryptocurrency era, offering an alternative to traditional financial systems.
 The global Bitcoin market has experienced significant growth since its inception.
@@ -52,10 +32,9 @@ This volatility is influenced by various factors, including regulatory developme
 advancements within the cryptocurrency ecosystem.
 Investors and analysts continue to monitor Bitcoin's performance closely, considering its potential for high returns \
 alongside inherent risks. As the cryptocurrency market evolves, Bitcoin remains a central figure, influencing the broader \
-adoption and acceptance of digital assets worldwide.`,
-    }
-  }
-})
+adoption and acceptance of digital assets worldwide.`)
+
+const prompt = ref('')
 </script>
 
 <style lang="scss" scoped>
@@ -74,9 +53,9 @@ adoption and acceptance of digital assets worldwide.`,
 .chat-agent-output {
   flex-grow: 1;
   font-size: 12px;
-  color: black;
-  background-color: white;
-  --n-count-text-color-disabled: black !important;
-  --n-placeholder-color-disabled: black !important;
+  padding: 4px;
+  border: #e5e5e5;
+  border-style: solid;
+  border-width: thin;
 }
 </style>
