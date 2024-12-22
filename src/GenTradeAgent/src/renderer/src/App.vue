@@ -2,7 +2,7 @@
 import TradingMain from './components/TradingMain.vue'
 import StatusBar from './components/StatusBar.vue'
 import 'vfonts/Lato.css'
-// const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+
 </script>
 
 <template>
