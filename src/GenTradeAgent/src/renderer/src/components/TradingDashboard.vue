@@ -6,11 +6,40 @@
 
 <script setup lang="ts">
 import { vResizeObserver } from '@vueuse/components'
-import { onMounted } from 'vue'
+import { onMounted, inject, Ref, watch, ref } from 'vue'
 import { createChart, IChartApi, TickMarkType } from 'lightweight-charts'
+import type { ohlcvData } from '@renderer/const';
 
 let chartObj: IChartApi | null = null
 let chartElement: HTMLElement | null = null
+let candlestickSeries
+let ohlcvDb:{ [assetName: string]: { [timeFrame: string]: ohlcvData[] } } | null = null
+
+const currentAsset = inject<Ref<string>>('currentAsset', ref('btc'))
+const currentTimeFrame = inject<Ref<string>>('currentTimeFrame', ref('1h'))
+
+window.electron.ipcRenderer.invoke('getOhlcvDB').then((response) => {
+  ohlcvDb = response
+  if (ohlcvDb) {
+    candlestickSeries.setData(ohlcvDb[currentAsset.value][currentTimeFrame.value])
+  }
+})
+
+watch(currentAsset, (newValue, oldValue) => {
+  console.log(`The state changed from ${oldValue} to ${newValue}`)
+  console.log(ohlcvDb)
+  if (ohlcvDb) {
+    candlestickSeries.setData(ohlcvDb[newValue][currentTimeFrame.value])
+  }
+})
+
+watch(currentTimeFrame, (newValue, oldValue) => {
+  console.log(`The state changed from ${oldValue} to ${newValue}`)
+  console.log(ohlcvDb)
+  if (ohlcvDb) {
+    candlestickSeries.setData(ohlcvDb[currentAsset.value][newValue])
+  }
+})
 
 const resizeHandler = () => {
   if (chartElement) {
@@ -22,10 +51,6 @@ const resizeHandler = () => {
 }
 
 onMounted(() => {
-  window.electron.ipcRenderer.invoke('getCryptoAssets').then((response) => {
-    console.log(response)
-  })
-
   const chartOptions = {
     layout: {
       textColor: 'black',
@@ -76,18 +101,14 @@ onMounted(() => {
         text: 'GenAI Trading Agent (Lu Ken)'
       }
     })
-    const candlestickSeries = chartObj.addCandlestickSeries({
+    candlestickSeries = chartObj.addCandlestickSeries({
       upColor: '#26a69a',
       downColor: '#ef5350',
       borderVisible: false,
       wickUpColor: '#26a69a',
       wickDownColor: '#ef5350'
     })
-
-    window.electron.ipcRenderer.invoke('getOhlcvBTC').then((response) => {
-      console.log(response)
-      candlestickSeries.setData(response)
-    })
+    console.log(candlestickSeries)
 
     chartObj.timeScale().fitContent()
     window.addEventListener('resize', () => resizeHandler())
