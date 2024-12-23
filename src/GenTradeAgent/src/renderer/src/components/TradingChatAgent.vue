@@ -1,14 +1,15 @@
 <template>
   <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
-    <n-log class="chat-agent-output" :log="placeholder_output" :font-size="12"/>
+    <n-log class="chat-agent-output" :log="placeholder_output" :font-size="12" />
     <n-input
-      :value="prompt"
+      v-model:value="prompt"
       class="chat-agent-input"
       size="large"
       type="textarea"
       placeholder="Prompt please show last 200 days bitcon prices"
       autosize
+      @input="handleInput"
     />
   </div>
 </template>
@@ -44,6 +45,10 @@ onMounted(() => {
     //placeholder_output.value = JSON.stringify(response)
   })
 })
+
+const handleInput = (v: string) => {
+  console.log(v)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -66,5 +71,4 @@ onMounted(() => {
   border-style: solid;
   border-width: thin;
 }
-
 </style>
