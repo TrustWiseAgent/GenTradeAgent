@@ -1,41 +1,54 @@
 <template>
-  <splitpanes class="default-theme">
-    <pane class="pane-dashboard">
-      <div class="pane-dashboard-title">
-        <n-space horizontal>
-          <n-select
-            v-model:value="currentAsset"
-            filterable
-            placeholder="Please select an asset"
-            :options="optionsAsset"
-            size="tiny"
-            menu-size="tiny"
-            class="title-item"
-          />
-          <n-select
-            v-model:value="currentTimeFrame"
-            filterable
-            :options="optionsTimeFrame"
-            size="tiny"
-            menu-size="tiny"
-            class="title-item"
-          />
-        </n-space>
-      </div>
-      <TradingDashboard class="pane-dashboard-chart" />
-    </pane>
-    <pane class="pane-agent" min-size="20" max-size="30">
-      <TradingChatAgent />
-    </pane>
-  </splitpanes>
+  <n-space vertical size="large">
+    <n-layout has-sider sider-placement="right" class="main-layout">
+      <n-layout-content content-style="padding: 4px;">
+        <div class="pane-dashboard">
+          <div class="pane-dashboard-title">
+            <n-space horizontal size="small">
+              <n-select
+                v-model:value="currentAsset"
+                filterable
+                placeholder="Please select an asset"
+                :options="optionsAsset"
+                size="tiny"
+                menu-size="tiny"
+                class="title-item"
+                style="width: 100px"
+              />
+              <n-select
+                v-model:value="currentTimeFrame"
+                filterable
+                :options="optionsTimeFrame"
+                size="tiny"
+                menu-size="tiny"
+                class="title-item"
+                style="width: 70px"
+              />
+            </n-space>
+          </div>
+          <TradingDashboard class="pane-dashboard-chart" />
+        </div>
+      </n-layout-content>
+      <n-layout-sider
+        collapse-mode="width"
+        :collapsed-width="10"
+        :native-scrollbar="false"
+        :width="400"
+        show-trigger="arrow-circle"
+        content-style="padding: 1px;"
+        :show-collapsed-content="false"
+        bordered
+      >
+        <TradingChatAgent style="height: calc(100vh - 32px)" />
+      </n-layout-sider>
+    </n-layout>
+  </n-space>
 </template>
 
 <script setup lang="ts">
-import { Splitpanes, Pane } from 'splitpanes'
 import TradingDashboard from './TradingDashboard.vue'
-import 'splitpanes/dist/splitpanes.css'
 import TradingChatAgent from './TradingChatAgent.vue'
-import { NSpace, NSelect } from 'naive-ui'
+import { NSpace, NSelect, NLayout, NLayoutContent, NLayoutSider } from 'naive-ui'
 import { ref, provide } from 'vue'
 
 const currentAsset = ref('')
@@ -46,25 +59,25 @@ provide('currentTimeFrame', currentTimeFrame)
 const optionsAsset = ref([{}])
 const optionsTimeFrame = ref([
   {
-    label: "1h",
-    value: "1h"
+    label: '1h',
+    value: '1h'
   },
   {
-    label: "1d",
-    value: "1d"
+    label: '1d',
+    value: '1d'
   },
   {
-    label: "1w",
-    value: "1w"
+    label: '1w',
+    value: '1w'
   },
   {
-    label: "1M",
-    value: "1M"
+    label: '1M',
+    value: '1M'
   }
 ])
 window.electron.ipcRenderer.invoke('getOhlcvDB').then((response) => {
   Object.keys(response).forEach((item) =>
-  optionsAsset.value.push({
+    optionsAsset.value.push({
       label: item,
       value: item
     })
@@ -77,25 +90,29 @@ window.electron.ipcRenderer.invoke('getOhlcvDB').then((response) => {
 </script>
 
 <style lang="scss" scoped>
-.splitpanes {
+.main-layout {
   width: 100vw;
   height: calc(100vh - 30px);
 }
 
 .pane-dashboard {
-  background-color: #f3f3f3 !important;
+  //background-color: #f3f3f3;
+  height: 100%;
   display: flex;
   padding: 2px;
   flex-direction: column;
 }
 
 .pane-dashboard-title {
-  height: 23px;
+  height: 25px;
   margin-bottom: 2px;
 }
 
 .pane-dashboard-chart {
-  flex-grow: 1;
+  height: calc(100% - 20px);
+  border: #f3f3f3;
+  border-style: solid;
+  border-width: thin;
 }
 
 .pane-agent {
