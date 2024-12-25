@@ -37,12 +37,10 @@
         :native-scrollbar="false"
         :width="400"
         show-trigger="arrow-circle"
-        content-style="padding: 1px;"
         :show-collapsed-content="false"
         bordered
-        class="pane-agent"
       >
-        <TradingChatAgent style="height: calc(100vh - 32px)" />
+        <TradingChatAgent class="pane-agent" />
       </n-layout-sider>
     </n-layout>
   </n-space>
@@ -132,7 +130,8 @@ const handleUpdateCurrentInterval = (value: string) => {
 }
 
 .pane-agent {
+  height: calc(100vh - 30px);
   display: flex;
-  margin-right: 4px;
+  padding: 5px;
 }
 </style>

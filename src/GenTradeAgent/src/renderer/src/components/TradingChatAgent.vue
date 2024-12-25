@@ -1,6 +1,9 @@
 <template>
   <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
+    <div class="chat-title-box">
+      <span >From Agentic Server::</span>
+    </div>
     <n-log class="chat-agent-output" :log="placeholder_output" :font-size="12" />
     <n-input
       v-model:value="prompt"
@@ -37,9 +40,7 @@ adoption and acceptance of digital assets worldwide.`)
 
 const prompt = ref('')
 
-onMounted(() => {
-
-})
+onMounted(() => {})
 
 const handleInput = (v: string) => {
   console.log(v)
@@ -47,6 +48,11 @@ const handleInput = (v: string) => {
 </script>
 
 <style lang="scss" scoped>
+.chat-title-box {
+  height: 25px;
+  margin-bottom: 2px;
+  align-items: center;
+}
 .chat-agent-all {
   width: 100%;
   display: flex;

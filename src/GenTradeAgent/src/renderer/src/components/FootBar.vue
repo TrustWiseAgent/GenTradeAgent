@@ -1,7 +1,7 @@
 <template>
   <div class="foot-main">
     <div class="foot-notification">
-      <span>Latest Prices</span>
+      <span>{{ nodifyMessage }}</span>
     </div>
     <n-space class="foot-status">
       <span class="status-icon">Version v0.1</span>
@@ -19,8 +19,21 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
 import { PlugConnected20Filled, Clock20Regular } from '@vicons/fluent'
 import { NIcon, NSpace, NButton } from 'naive-ui'
+import { useStore } from '../store'
+
+const store = useStore()
+
+const nodifyMessage = ref('Notification Message')
+store.watch(
+  (state) => state.notifyMessage,
+  (value) => {
+    nodifyMessage.value = value
+  }
+)
+
 </script>
 <style lang="scss" scoped>
 .foot-main {

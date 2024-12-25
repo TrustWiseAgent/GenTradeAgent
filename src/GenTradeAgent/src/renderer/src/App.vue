@@ -9,7 +9,6 @@ import {
   NDialogProvider,
   NNotificationProvider,
   NLoadingBarProvider,
-  darkTheme
 } from 'naive-ui'
 </script>
 
