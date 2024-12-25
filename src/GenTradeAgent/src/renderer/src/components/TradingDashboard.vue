@@ -36,7 +36,7 @@ onMounted(() => {
   const chartOptions = {
     layout: {
       textColor: 'black',
-      backgroundColor: { type: 'solid', color: 'white' },
+      background: { color: 'white' },
       attributionLogo: false
     },
     localization: {

@@ -40,6 +40,7 @@
         content-style="padding: 1px;"
         :show-collapsed-content="false"
         bordered
+        class="pane-agent"
       >
         <TradingChatAgent style="height: calc(100vh - 32px)" />
       </n-layout-sider>
@@ -103,12 +104,6 @@ const handleUpdateCurrentAsset = (value: string) => {
 const handleUpdateCurrentInterval = (value: string) => {
   store.commit('updateCurrentInterval', value)
 }
-
-
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -118,7 +113,6 @@ const handleUpdateCurrentInterval = (value: string) => {
 }
 
 .pane-dashboard {
-  //background-color: #f3f3f3;
   height: 100%;
   display: flex;
   padding: 2px;
@@ -138,8 +132,7 @@ const handleUpdateCurrentInterval = (value: string) => {
 }
 
 .pane-agent {
-  background-color: #f3f3f3 !important;
   display: flex;
-  padding: 4px;
+  margin-right: 4px;
 }
 </style>
