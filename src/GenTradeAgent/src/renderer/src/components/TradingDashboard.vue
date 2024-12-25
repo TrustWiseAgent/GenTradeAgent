@@ -6,40 +6,22 @@
 
 <script setup lang="ts">
 import { vResizeObserver } from '@vueuse/components'
-import { onMounted, inject, Ref, watch, ref } from 'vue'
+import { onMounted } from 'vue'
 import { createChart, IChartApi, TickMarkType } from 'lightweight-charts'
-import type { ohlcvData } from '@renderer/const';
+import { useStore } from '@renderer/store'
+
+const store = useStore()
 
 let chartObj: IChartApi | null = null
 let chartElement: HTMLElement | null = null
 let candlestickSeries
-let ohlcvDb:{ [assetName: string]: { [timeFrame: string]: ohlcvData[] } } | null = null
 
-const currentAsset = inject<Ref<string>>('currentAsset', ref('btc'))
-const currentTimeFrame = inject<Ref<string>>('currentTimeFrame', ref('1h'))
-
-window.electron.ipcRenderer.invoke('getOhlcvDB').then((response) => {
-  ohlcvDb = response
-  if (ohlcvDb) {
-    candlestickSeries.setData(ohlcvDb[currentAsset.value][currentTimeFrame.value])
+store.watch(
+  (state) => state.currentOhlcv,
+  (value) => {
+    candlestickSeries.setData(value)
   }
-})
-
-watch(currentAsset, (newValue, oldValue) => {
-  console.log(`The state changed from ${oldValue} to ${newValue}`)
-  console.log(ohlcvDb)
-  if (ohlcvDb) {
-    candlestickSeries.setData(ohlcvDb[newValue][currentTimeFrame.value])
-  }
-})
-
-watch(currentTimeFrame, (newValue, oldValue) => {
-  console.log(`The state changed from ${oldValue} to ${newValue}`)
-  console.log(ohlcvDb)
-  if (ohlcvDb) {
-    candlestickSeries.setData(ohlcvDb[currentAsset.value][newValue])
-  }
-})
+)
 
 const resizeHandler = () => {
   if (chartElement) {
@@ -108,7 +90,6 @@ onMounted(() => {
       wickUpColor: '#26a69a',
       wickDownColor: '#ef5350'
     })
-    console.log(candlestickSeries)
 
     chartObj.timeScale().fitContent()
     window.addEventListener('resize', () => resizeHandler())

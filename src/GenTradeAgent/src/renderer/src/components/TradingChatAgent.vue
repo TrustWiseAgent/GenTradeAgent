@@ -38,12 +38,7 @@ adoption and acceptance of digital assets worldwide.`)
 const prompt = ref('')
 
 onMounted(() => {
-  // window.electron.ipcRenderer.invoke('getCryptoAssets').then((response) => {
-  //   //console.log(response)
-  //   //console.log(Object.keys(response))
-  //   //placeholder_output.value = Object.keys(response).toString
-  //   //placeholder_output.value = JSON.stringify(response)
-  // })
+
 })
 
 const handleInput = (v: string) => {
