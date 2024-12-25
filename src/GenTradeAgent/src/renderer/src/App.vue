@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TradingMain from './components/TradingMain.vue'
-import StatusBar from './components/StatusBar.vue'
+import FootBar from './components/FootBar.vue'
 import 'vfonts/Lato.css'
 import {
   NConfigProvider,
@@ -8,12 +8,12 @@ import {
   NMessageProvider,
   NDialogProvider,
   NNotificationProvider,
-  NLoadingBarProvider
+  NLoadingBarProvider,
 } from 'naive-ui'
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="{ common: { fontWeightStrong: '600' } }">
+  <n-config-provider :theme-overrides="{ common: { fontWeightStrong: '600' } }" :theme="null">
     <n-modal-provider>
       <n-dialog-provider>
         <n-message-provider>
@@ -21,7 +21,7 @@ import {
             <n-loading-bar-provider>
               <div class="app-main">
                 <TradingMain class="app-trading" />
-                <StatusBar class="app-status" />
+                <FootBar class="app-status" />
               </div>
             </n-loading-bar-provider>
           </n-notification-provider>
@@ -41,14 +41,10 @@ import {
 
 .app-trading {
   flex-grow: 1;
-  border: #e5e5e5;
-  border-style: solid;
-  border-width: thin;
-  background: #f3f3f3;
 }
 
 .app-status {
   height: 30px;
-  background: #f3f3f3;
+  background-color: var(--color-background-mute);
 }
 </style>

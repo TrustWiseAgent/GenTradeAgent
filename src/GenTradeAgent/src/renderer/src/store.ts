@@ -10,21 +10,23 @@ export interface ohlcvData {
   vol: number
 }
 
-export interface State {
+export interface IState {
   ohlcvDB: { [asset: string]: { [interval: string]: ohlcvData[] } }
   currentAsset: string
   currentOhlcv: ohlcvData[]
   currentInterval: string
+  notifyMessage: string
 }
 
-export const keyStore: InjectionKey<Store<State>> = Symbol()
+export const keyStore: InjectionKey<Store<IState>> = Symbol()
 
-export const store = createStore<State>({
+export const store = createStore<IState>({
   state: () => ({
     ohlcvDB: { btc: { '1h': [] } },
     currentAsset: 'btc',
     currentOhlcv: [],
-    currentInterval: '1h'
+    currentInterval: '1h',
+    notifyMessage: 'Last message'
   }),
   mutations: {
     updateOhlcvDB(state, newOhlcvDB) {
@@ -42,6 +44,9 @@ export const store = createStore<State>({
       console.log('updateCurrentInterval')
       state.currentInterval = newInterval
       state.currentOhlcv = state.ohlcvDB[state.currentAsset][state.currentInterval]
+    },
+    updateNotification(state, notifyMessage) {
+      state.notifyMessage = notifyMessage
     }
   }
 })
