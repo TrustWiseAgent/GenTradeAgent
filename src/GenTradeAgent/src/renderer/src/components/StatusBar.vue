@@ -20,6 +20,7 @@
 </template>
 <script setup lang="ts">
 import { PlugConnected20Filled, Clock20Regular } from '@vicons/fluent'
+import { NIcon } from 'naive-ui';
 </script>
 <style lang="scss" scoped>
 .status-main {

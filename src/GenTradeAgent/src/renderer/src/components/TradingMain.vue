@@ -14,15 +14,17 @@
                 menu-size="tiny"
                 class="title-item"
                 style="width: 100px"
+                @update:value="handleUpdateCurrentAsset"
               />
               <n-select
-                v-model:value="currentTimeFrame"
+                v-model:value="currentInterval"
                 filterable
-                :options="optionsTimeFrame"
+                :options="optionsInterval"
                 size="tiny"
                 menu-size="tiny"
                 class="title-item"
                 style="width: 70px"
+                @update:value="handleUpdateCurrentInterval"
               />
             </n-space>
           </div>
@@ -46,18 +48,24 @@
 </template>
 
 <script setup lang="ts">
+import { NSpace, NSelect, NLayout, NLayoutContent, NLayoutSider } from 'naive-ui'
+import { ref } from 'vue'
+
 import TradingDashboard from './TradingDashboard.vue'
 import TradingChatAgent from './TradingChatAgent.vue'
-import { NSpace, NSelect, NLayout, NLayoutContent, NLayoutSider } from 'naive-ui'
-import { ref, provide } from 'vue'
+import { useStore } from '../store'
 
-const currentAsset = ref('')
-provide('currentAsset', currentAsset)
-const currentTimeFrame = ref('1h')
-provide('currentTimeFrame', currentTimeFrame)
+interface IOption {
+  label: string
+  value: string
+}
 
-const optionsAsset = ref([{}])
-const optionsTimeFrame = ref([
+const store = useStore()
+
+const optionsAsset = ref<IOption[]>([])
+const currentAsset = ref(store.state.currentAsset)
+const currentInterval = ref('1h')
+const optionsInterval = ref([
   {
     label: '1h',
     value: '1h'
@@ -75,18 +83,32 @@ const optionsTimeFrame = ref([
     value: '1M'
   }
 ])
-window.electron.ipcRenderer.invoke('getOhlcvDB').then((response) => {
-  Object.keys(response).forEach((item) =>
-    optionsAsset.value.push({
-      label: item,
-      value: item
-    })
-  )
-  optionsAsset.value.splice(0, 1)
 
-  currentAsset.value = Object.keys(response)[0]
-  console.log(currentAsset.value)
-})
+store.watch(
+  (state) => state.ohlcvDB,
+  (value) => {
+    Object.keys(value).forEach((item) => {
+      optionsAsset.value.push({
+        label: item,
+        value: item
+      })
+    })
+  }
+)
+
+const handleUpdateCurrentAsset = (value: string) => {
+  store.commit('updateCurrentAsset', value)
+}
+
+const handleUpdateCurrentInterval = (value: string) => {
+  store.commit('updateCurrentInterval', value)
+}
+
+
+
+
+
+
 </script>
 
 <style lang="scss" scoped>
