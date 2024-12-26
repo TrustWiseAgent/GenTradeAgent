@@ -1,21 +1,71 @@
 <template>
   <div class="dashboard-all">
-    <div id="trading-chart" v-resize-observer="resizeHandler" class="trading-chart"></div>
+    <div
+      id="trading-chart"
+      v-resize-observer="resizeHandler"
+      class="trading-chart"
+      @contextmenu="handleContextMenu"
+    ></div>
+    <n-dropdown
+      placement="bottom-start"
+      trigger="manual"
+      :x="x"
+      :y="y"
+      :options="contextMenuOptions"
+      :show="showDropdown"
+      :on-clickoutside="onClickoutside"
+      @select="handleSelectMenu"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { vResizeObserver } from '@vueuse/components'
-import { onMounted } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { createChart, IChartApi, TickMarkType } from 'lightweight-charts'
 import { useStore } from '@renderer/store'
-
-const store = useStore()
+import { NDropdown } from 'naive-ui'
 
 let chartObj: IChartApi | null = null
 let chartElement: HTMLElement | null = null
 let candlestickSeries
 
+const contextMenuOptions = [
+  {
+    label: 'Reset Chart',
+    key: 'Reset Chart'
+  }
+]
+
+const showDropdown = ref(false)
+const x = ref(0)
+const y = ref(0)
+
+const onClickoutside = () => {
+  showDropdown.value = false
+}
+
+const handleContextMenu = (e: MouseEvent) => {
+  e.preventDefault()
+  showDropdown.value = false
+  nextTick().then(() => {
+    showDropdown.value = true
+    x.value = e.clientX
+    y.value = e.clientY
+  })
+}
+
+const handleSelectMenu = (key: string | number) => {
+  showDropdown.value = false
+  console.log(key)
+  if (key == 'Reset Chart') {
+    if (chartObj != null) {
+      chartObj.timeScale().fitContent()
+    }
+  }
+}
+
+const store = useStore()
 store.watch(
   (state) => state.currentOhlcv,
   (value) => {
