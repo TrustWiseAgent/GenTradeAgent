@@ -1,7 +1,7 @@
 //
 // Manage the local cache data
 //
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { parse } from 'csv-parse'
 interface ohlcvData {
@@ -12,10 +12,28 @@ interface ohlcvData {
   close: number | string
   vol: number | string
 }
+
+interface ICryptoAsset {
+  base: string
+  quote: string
+  symbol: string
+  type: string
+}
+
+interface IStockUSAsset {
+  cik_str: number
+  ticker: string
+  title: string
+}
 export class LocalStore {
   private rootDir: string
-  private cryptoAssets: object | null = null
-  private stockUSAssets: object | null = null
+  private cryptoAssetDB: { [typeName: string]: { [assetName: string]: ICryptoAsset } } = {
+    spot: {},
+    future: {},
+    swap: {}
+  }
+  private stockUSAssetDB: { [assetName: string]: IStockUSAsset } = {}
+
   private ohlcDB: { [assetName: string]: { [timeFrame: string]: ohlcvData[] } } = {}
   public constructor(cacheDir: string) {
     this.rootDir = cacheDir
@@ -66,36 +84,60 @@ export class LocalStore {
     )
   }
 
-  public init(): boolean {
-    this.cryptoAssets = this.loadJsonData(join(this.rootDir, 'Binance/crypto_assets.json'))
-    this.stockUSAssets = this.loadJsonData(join(this.rootDir, 'StockUS/stock_us_ticker.json'))
-    const arr = ['btc', 'msft']
-    arr.forEach((item: string) => {
-      this.ohlcDB[item] = {
+  public loadOhlcvData(marketPrefix: string, assetName: string) {
+    const filepath_1h = join(this.rootDir, marketPrefix + assetName + '-1hour.csv')
+    const filepath_1d = join(this.rootDir, marketPrefix + assetName + '-1day.csv')
+    const filepath_1w = join(this.rootDir, marketPrefix + assetName + '-1week.csv')
+    const filepath_1M = join(this.rootDir, marketPrefix + assetName + '-1mon.csv')
+
+    if (existsSync(filepath_1h)) {
+      this.ohlcDB[assetName] = {
         '1h': [],
         '1d': [],
         '1w': [],
         '1M': []
       }
-    })
-    this.loadCsvData(join(this.rootDir, 'Binance/btc_usdt-1hour.csv'), this.ohlcDB['btc']['1h'])
-    this.loadCsvData(join(this.rootDir, 'Binance/btc_usdt-1mon.csv'), this.ohlcDB['btc']['1M'])
-    this.loadCsvData(join(this.rootDir, 'Binance/btc_usdt-1day.csv'), this.ohlcDB['btc']['1d'])
-    this.loadCsvData(join(this.rootDir, 'Binance/btc_usdt-1week.csv'), this.ohlcDB['btc']['1w'])
+      this.loadCsvData(filepath_1h, this.ohlcDB[assetName]['1h'])
+    }
+    if (existsSync(filepath_1d)) {
+      this.loadCsvData(filepath_1d, this.ohlcDB[assetName]['1d'])
+    }
+    if (existsSync(filepath_1w)) {
+      this.loadCsvData(filepath_1w, this.ohlcDB[assetName]['1w'])
+    }
+    if (existsSync(filepath_1M)) {
+      this.loadCsvData(filepath_1M, this.ohlcDB[assetName]['1M'])
+    }
+  }
 
-    this.loadCsvData(join(this.rootDir, 'StockUS/msft-1hour.csv'), this.ohlcDB['msft']['1h'])
-    this.loadCsvData(join(this.rootDir, 'StockUS/msft-1mon.csv'), this.ohlcDB['msft']['1M'])
-    this.loadCsvData(join(this.rootDir, 'StockUS/msft-1day.csv'), this.ohlcDB['msft']['1d'])
-    this.loadCsvData(join(this.rootDir, 'StockUS/msft-1week.csv'), this.ohlcDB['msft']['1w'])
+  public init(): boolean {
+    const cryptoAssets: { [name: string]: ICryptoAsset } = this.loadJsonData(
+      join(this.rootDir, 'Binance/crypto_assets.json')
+    ) as { [name: string]: ICryptoAsset }
+
+    Object.keys(cryptoAssets).forEach((assetName) => {
+      this.cryptoAssetDB[cryptoAssets[assetName].type][assetName] = cryptoAssets[assetName]
+      if (cryptoAssets[assetName].type == 'spot') {
+        this.loadOhlcvData('Binance/', assetName)
+      }
+    })
+
+    const stockUSAssets = this.loadJsonData(join(this.rootDir, 'StockUS/stock_us_ticker.json')) as {
+      [id: string]: IStockUSAsset
+    }
+    Object.values(stockUSAssets).forEach((item) => {
+      this.stockUSAssetDB[item.ticker.toLowerCase()] = item
+      this.loadOhlcvData('StockUS/', item.ticker.toLowerCase())
+    })
     return true
   }
 
-  public getCryptoAssets(): object | null {
-    return this.cryptoAssets
+  public getCryptoAssetDB(): object | null {
+    return this.cryptoAssetDB
   }
 
-  public getStockUSAssets(): object | null {
-    return this.stockUSAssets
+  public getStockUSAssetDB(): object | null {
+    return this.stockUSAssetDB
   }
 
   public getOhlcvDB(): { [assetName: string]: { [timeFrame: string]: ohlcvData[] } } {

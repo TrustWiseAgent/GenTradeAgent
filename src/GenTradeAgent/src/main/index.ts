@@ -52,8 +52,8 @@ app.whenReady().then(() => {
 
   const store = new LocalStore(join(app.getAppPath(), '../../data'))
   ipcMain.on('loadCache', () => store.init())
-  ipcMain.handle('getCryptoAssets', () => store.getCryptoAssets())
-  ipcMain.handle('getStockUSAssets', () => store.getStockUSAssets())
+  ipcMain.handle('getCryptoAssetDB', () => store.getCryptoAssetDB())
+  ipcMain.handle('getStockUSAssetDB', () => store.getStockUSAssetDB())
   ipcMain.handle('getOhlcvDB', () => store.getOhlcvDB())
 
   createWindow()

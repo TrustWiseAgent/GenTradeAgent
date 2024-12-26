@@ -13,7 +13,7 @@
                 size="tiny"
                 menu-size="tiny"
                 class="title-item"
-                style="width: 100px"
+                style="width: 200px"
                 @update:value="handleUpdateCurrentAsset"
               />
               <n-select
@@ -52,7 +52,7 @@ import { ref } from 'vue'
 
 import TradingDashboard from './TradingDashboard.vue'
 import TradingChatAgent from './TradingChatAgent.vue'
-import { useStore } from '../store'
+import { useStore, getMarket } from '../store'
 
 interface IOption {
   label: string
@@ -88,7 +88,7 @@ store.watch(
   (value) => {
     Object.keys(value).forEach((item) => {
       optionsAsset.value.push({
-        label: item,
+        label: getMarket(store.state, item) + ': ' + item,
         value: item
       })
     })
