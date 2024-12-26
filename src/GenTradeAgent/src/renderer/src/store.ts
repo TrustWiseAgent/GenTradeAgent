@@ -10,7 +10,22 @@ export interface ohlcvData {
   vol: number
 }
 
+interface ICryptoAsset {
+  base: string
+  quote: string
+  symbol: string
+  type: string
+}
+
+interface IStockUSAsset {
+  cik_str: number
+  ticker: string
+  title: string
+}
+
 export interface IState {
+  cryptoAssets: { [assertType: string]: { [asset: string]: ICryptoAsset } }
+  stockUSAssets: { [asset: string]: IStockUSAsset }
   ohlcvDB: { [asset: string]: { [interval: string]: ohlcvData[] } }
   currentAsset: string
   currentOhlcv: ohlcvData[]
@@ -22,6 +37,8 @@ export const keyStore: InjectionKey<Store<IState>> = Symbol()
 
 export const store = createStore<IState>({
   state: () => ({
+    cryptoAssets: {},
+    stockUSAssets: {},
     ohlcvDB: { btc: { '1h': [] } },
     currentAsset: 'btc',
     currentOhlcv: [],
@@ -29,6 +46,14 @@ export const store = createStore<IState>({
     notifyMessage: 'Last message'
   }),
   mutations: {
+    updateCryptoAssetDB(state, newCryptoAssetDB) {
+      console.log('updateCryptoAssetDB')
+      state.cryptoAssets = newCryptoAssetDB
+    },
+    updateStockUSAssetDB(state, newStockUSDB) {
+      console.log('updateStockUSAssetDB')
+      state.stockUSAssets = newStockUSDB
+    },
     updateOhlcvDB(state, newOhlcvDB) {
       console.log('updateOhlcvDB')
       state.ohlcvDB = newOhlcvDB
@@ -54,4 +79,18 @@ export const store = createStore<IState>({
 // define your own `useStore` composition function
 export function useStore() {
   return baseUseStore(keyStore)
+}
+
+export function getMarket(state: IState, asset: string): string | null {
+  if (state.cryptoAssets['spot'] != null) {
+    if (asset in state.cryptoAssets['spot']) {
+      return 'Crypto[Spot]'
+    }
+  }
+  console.log(state.stockUSAssets)
+  if (asset in state.stockUSAssets) {
+    return 'Stock[US]'
+  }
+
+  return null
 }
