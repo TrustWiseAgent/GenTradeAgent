@@ -31,6 +31,7 @@ export interface IState {
   currentOhlcv: ohlcvData[]
   currentInterval: string
   notifyMessage: string
+  serverLatency: number
 }
 
 export const keyStore: InjectionKey<Store<IState>> = Symbol()
@@ -43,7 +44,8 @@ export const store = createStore<IState>({
     currentAsset: 'btc',
     currentOhlcv: [],
     currentInterval: '1h',
-    notifyMessage: 'Last message'
+    notifyMessage: 'Last message',
+    serverLatency: -1
   }),
   mutations: {
     updateCryptoAssetDB(state, newCryptoAssetDB) {
@@ -72,6 +74,9 @@ export const store = createStore<IState>({
     },
     updateNotification(state, notifyMessage) {
       state.notifyMessage = notifyMessage
+    },
+    updateServerConnection(state, latency) {
+      state.serverLatency = latency
     }
   }
 })
@@ -87,7 +92,6 @@ export function getMarket(state: IState, asset: string): string | null {
       return 'Crypto[Spot]'
     }
   }
-  console.log(state.stockUSAssets)
   if (asset in state.stockUSAssets) {
     return 'Stock[US]'
   }

@@ -53,6 +53,7 @@ import { ref } from 'vue'
 import TradingDashboard from './TradingDashboard.vue'
 import TradingChatAgent from './TradingChatAgent.vue'
 import { useStore, getMarket } from '../store'
+import { agentServer } from '@renderer/server'
 
 interface IOption {
   label: string
@@ -102,6 +103,14 @@ const handleUpdateCurrentAsset = (value: string) => {
 const handleUpdateCurrentInterval = (value: string) => {
   store.commit('updateCurrentInterval', value)
 }
+
+agentServer.store = useStore()
+const handlerPingServer = (() => {
+  agentServer.ping()
+  setTimeout(handlerPingServer, 10000)
+})
+handlerPingServer()
+
 </script>
 
 <style lang="scss" scoped>

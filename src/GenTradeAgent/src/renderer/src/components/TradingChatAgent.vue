@@ -2,7 +2,7 @@
   <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
     <div class="chat-title-box">
-      <span >From Agentic Server:</span>
+      <span>From Agentic Server:</span>
     </div>
     <n-log class="chat-agent-output" :log="placeholder_output" :font-size="12" />
     <n-input
@@ -18,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { NInput, NLog } from 'naive-ui'
 
-const placeholder_output = ref(`Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
+const placeholder_output =
+  ref(`Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
 digital currency that enables peer-to-peer transactions without the need for intermediaries like banks. Its creation marked \
 the beginning of the cryptocurrency era, offering an alternative to traditional financial systems.
 The global Bitcoin market has experienced significant growth since its inception.
@@ -42,8 +43,10 @@ const prompt = ref('')
 onMounted(() => {})
 
 const handleInput = (v: string) => {
-  console.log(v)
+  //console.log(v)
 }
+
+
 </script>
 
 <style lang="scss" scoped>

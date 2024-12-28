@@ -57,7 +57,7 @@ const handleContextMenu = (e: MouseEvent) => {
 
 const handleSelectMenu = (key: string | number) => {
   showDropdown.value = false
-  console.log(key)
+
   if (key == 'Reset Chart') {
     if (chartObj != null) {
       chartObj.timeScale().fitContent()
