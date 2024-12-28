@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@vicons/ionicons5": "^0.13.0",
+    "axios": "^1.7.9",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
