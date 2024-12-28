@@ -7,9 +7,7 @@ class AgentServer {
   apiKey: string = 'e54d4431-5dab-474e-b71a-0db1fcb9e659'
   tzName: string = ''
   tzOffset: number = 0
-  store:Store<IState> = null
-
-  constructor() {}
+  store: Store<IState> | null = null
 
   ping() {
     const tsStart = new Date().getTime()
