@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref } from 'vue'
 import { NInput, NLog } from 'naive-ui'
 
 const placeholder_output =
@@ -43,7 +43,7 @@ const prompt = ref('')
 onMounted(() => {})
 
 const handleInput = (v: string) => {
-  //console.log(v)
+  console.log(v)
 }
 
 

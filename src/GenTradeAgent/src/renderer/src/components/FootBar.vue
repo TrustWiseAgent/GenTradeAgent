@@ -51,7 +51,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { PlugConnected20Filled, PlugDisconnected20Regular, Clock20Regular } from '@vicons/fluent'
+import { PlugConnected20Filled, PlugDisconnected20Regular } from '@vicons/fluent'
 import { NIcon, NSpace, NButton, NModal, NInput } from 'naive-ui'
 import { useStore } from '../store'
 import { agentServer } from '@renderer/server'
