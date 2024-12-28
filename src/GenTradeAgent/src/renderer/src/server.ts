@@ -8,6 +8,7 @@ class AgentServer {
   tzName: string = ''
   tzOffset: number = 0
   store: Store<IState> | null = null
+  pingInterval: number = 10000
 
   ping() {
     const tsStart = new Date().getTime()
