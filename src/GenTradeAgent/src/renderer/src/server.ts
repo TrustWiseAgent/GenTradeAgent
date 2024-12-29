@@ -3,7 +3,7 @@ import { IState } from '@renderer/store'
 import { Store } from 'vuex'
 
 class AgentServer {
-  serverAddress: string = 'http://47.100.216.225:8000/api/v1'
+  serverAddress: string = 'http://127.0.0.1:8000/api/v1'
   apiKey: string = 'e54d4431-5dab-474e-b71a-0db1fcb9e659'
   tzName: string = ''
   tzOffset: number = 0
@@ -30,6 +30,29 @@ class AgentServer {
         if (this.store) {
           this.store.commit('updateServerConnection', -1)
         }
+      })
+  }
+
+  ask_question(prompt: string, callback: (answer: string) => void) {
+    const address = this.serverAddress + '/agent/'
+    axios.interceptors.request.use((request) => {
+      console.log('Starting Request', JSON.stringify(request, null, 2))
+      return request
+    })
+
+    axios.defaults.headers['X-API-KEY'] = 'e54d4431-5dab-474e-b71a-0db1fcb9e659'
+    axios
+      .get(address, {
+        params: {
+          prompt: prompt
+        }
+      })
+      .then((response) => {
+        console.log(response)
+        callback(response.data['answer']['content'])
+      })
+      .catch((err: AxiosError) => {
+        console.log(err)
       })
   }
 }
