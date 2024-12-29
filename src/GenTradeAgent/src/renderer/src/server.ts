@@ -3,7 +3,7 @@ import { IState } from '@renderer/store'
 import { Store } from 'vuex'
 
 class AgentServer {
-  serverAddress: string = 'http://127.0.0.1:8000/api/v1'
+  serverAddress: string = 'http://47.100.216.225:8000/api/v1'
   apiKey: string = 'e54d4431-5dab-474e-b71a-0db1fcb9e659'
   tzName: string = ''
   tzOffset: number = 0
