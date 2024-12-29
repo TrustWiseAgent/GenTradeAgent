@@ -105,12 +105,11 @@ const handleUpdateCurrentInterval = (value: string) => {
 }
 
 agentServer.store = useStore()
-const handlerPingServer = (() => {
+const handlerPingServer = () => {
   agentServer.ping()
-  setTimeout(handlerPingServer, 10000)
-})
+  setTimeout(handlerPingServer, agentServer.pingInterval)
+}
 handlerPingServer()
-
 </script>
 
 <style lang="scss" scoped>
