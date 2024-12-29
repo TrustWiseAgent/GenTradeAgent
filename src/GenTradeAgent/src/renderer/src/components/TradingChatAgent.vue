@@ -28,36 +28,51 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { NInput, NLog, NButton, NSpace, NIcon } from 'naive-ui'
 import { Delete20Filled, Copy20Filled } from '@vicons/fluent'
+import { useStore } from '@renderer/store'
+import { agentServer } from '@renderer/server'
 
-const placeholder_output =
-  ref(`Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
-digital currency that enables peer-to-peer transactions without the need for intermediaries like banks. Its creation marked \
-the beginning of the cryptocurrency era, offering an alternative to traditional financial systems.
-The global Bitcoin market has experienced significant growth since its inception.
-In 2021, the market size was valued at \
-approximately USD 17.05 billion, with projections indicating a compound annual growth rate (CAGR) of 26.2% from 2022 to 2030.
-As of December 20, 2024, Bitcoin's price is approximately $97,568.49 USD, with a 24-hour trading volume of around $95.98 \
-billion USD. The circulating supply is about 19.8 million BTC, nearing its maximum supply limit of 21 million coins.
-Bitcoin's price has been highly volatile throughout its history. Notably, it surpassed $100,000 for the first time on \
-December 5, 2024.
-This volatility is influenced by various factors, including regulatory developments, macroeconomic trends, and technological\
-advancements within the cryptocurrency ecosystem.
-Investors and analysts continue to monitor Bitcoin's performance closely, considering its potential for high returns \
-alongside inherent risks. As the cryptocurrency market evolves, Bitcoin remains a central figure, influencing the broader \
-adoption and acceptance of digital assets worldwide.`)
-
+const store = useStore()
+let isConnect = false
+const placeholder_output = ref(``)
 const prompt = ref('')
 
-onMounted(() => {})
-
-const handleInput = (v: string) => {
-  console.log(v)
+const onRemoteSay = (message) => {
+  placeholder_output.value += '\nGenAI: ' + message + '\n'
 }
 
+const onUserSay = (message) => {
+  placeholder_output.value += '\nUser: ' + message + '\n'
+}
 
+const onClientSay = (message) => {
+  placeholder_output.value += '\nclient: ' + message + '\n'
+}
+
+store.watch(
+  (state) => state.serverLatency,
+  (value) => {
+    if (isConnect && value == -1) {
+      isConnect = false
+      onClientSay('GenAI Server disconnected.')
+    }
+
+    if (!isConnect && value != -1) {
+      isConnect = true
+      onClientSay('GenAI Server connected.')
+    }
+  }
+)
+
+const handleInput = (v: string) => {
+  if (v.charCodeAt(v.length - 1) == 10) {
+    onUserSay(v)
+    prompt.value = ''
+    agentServer.ask_question(v, onRemoteSay)
+  }
+}
 
 const onClickCopy = () => {
   navigator.clipboard.writeText(placeholder_output.value)
@@ -66,20 +81,12 @@ const onClickDelete = () => {
   placeholder_output.value = ''
 }
 
-const onRemoteSay = (message) => {
-  placeholder_output.value += '\nGenAI: ' + message
-}
-
-const onUserSay = (message) => {
-  placeholder_output.value += '\nUser: ' + message
-}
-
-const onTimerOutput = () => {
-  onRemoteSay('hello')
-  onUserSay('how are you')
-  setTimeout(onTimerOutput, 1000)
-}
-onTimerOutput()
+// const onTimerOutput = () => {
+//   onRemoteSay('hello')
+//   onUserSay('how are you')
+//   setTimeout(onTimerOutput, 1000)
+// }
+// onTimerOutput()
 </script>
 
 <style lang="scss" scoped>
