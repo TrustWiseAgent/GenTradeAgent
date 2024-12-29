@@ -2,7 +2,17 @@
   <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
     <div class="chat-title-box">
-      <span>From Agentic Server:</span>
+      <div style="flex-grow: 1">
+        <span>GenAI Output: </span>
+      </div>
+      <n-space reverse size="small" style="margin-right: 5px">
+        <n-button class="chat-title-button" text style="font-size: 18px" @click="onClickDelete">
+          <n-icon><Delete20Filled></Delete20Filled></n-icon>
+        </n-button>
+        <n-button class="chat-title-button" text style="font-size: 18px" @click="onClickCopy">
+          <n-icon><Copy20Filled></Copy20Filled></n-icon>
+        </n-button>
+      </n-space>
     </div>
     <n-log class="chat-agent-output" :log="placeholder_output" :font-size="12" />
     <n-input
@@ -19,7 +29,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { NInput, NLog } from 'naive-ui'
+import { NInput, NLog, NButton, NSpace, NIcon } from 'naive-ui'
+import { Delete20Filled, Copy20Filled } from '@vicons/fluent'
 
 const placeholder_output =
   ref(`Bitcoin, introduced in 2009 by an anonymous entity known as Satoshi Nakamoto, is a decentralized \
@@ -47,15 +58,44 @@ const handleInput = (v: string) => {
 }
 
 
+
+const onClickCopy = () => {
+  navigator.clipboard.writeText(placeholder_output.value)
+}
+const onClickDelete = () => {
+  placeholder_output.value = ''
+}
+
+const onRemoteSay = (message) => {
+  placeholder_output.value += '\nGenAI: ' + message
+}
+
+const onUserSay = (message) => {
+  placeholder_output.value += '\nUser: ' + message
+}
+
+const onTimerOutput = () => {
+  onRemoteSay('hello')
+  onUserSay('how are you')
+  setTimeout(onTimerOutput, 1000)
+}
+onTimerOutput()
 </script>
 
 <style lang="scss" scoped>
 .chat-title-box {
   height: 25px;
+  width: 100%;
   display: flex;
   margin-bottom: 2px;
   align-items: center;
 }
+.chat-title-button {
+  height: 20px;
+  width: 20px;
+  align-items: center;
+}
+
 .chat-agent-all {
   width: 100%;
   display: flex;
