@@ -1,5 +1,4 @@
 <template>
-  <!-- <span style="color: blue; align-self: center">Agentic</span> -->
   <div class="chat-agent-all">
     <div class="chat-title-box">
       <div style="flex-grow: 1">
@@ -40,15 +39,15 @@ const placeholder_output = ref(``)
 const prompt = ref('')
 
 const onRemoteSay = (message) => {
-  placeholder_output.value += '\nGenAI: ' + message + '\n'
+  placeholder_output.value += '\nGenAI : ' + message + '\n'
 }
 
 const onUserSay = (message) => {
-  placeholder_output.value += '\nUser: ' + message + '\n'
+  placeholder_output.value += '\nUser : ' + message + '\n'
 }
 
 const onClientSay = (message) => {
-  placeholder_output.value += '\nclient: ' + message + '\n'
+  placeholder_output.value += '\System : ' + message + '\n'
 }
 
 store.watch(
@@ -56,13 +55,20 @@ store.watch(
   (value) => {
     if (isConnect && value == -1) {
       isConnect = false
-      onClientSay('GenAI Server disconnected.')
+      store.commit('updateNotification', 'GenAI Server disconnected.')
     }
 
     if (!isConnect && value != -1) {
       isConnect = true
-      onClientSay('GenAI Server connected.')
+      store.commit('updateNotification', 'GenAI Server connected.')
     }
+  }
+)
+
+store.watch(
+  (state) => state.notifyMessage,
+  (value) => {
+    onClientSay(value)
   }
 )
 
@@ -80,13 +86,6 @@ const onClickCopy = () => {
 const onClickDelete = () => {
   placeholder_output.value = ''
 }
-
-// const onTimerOutput = () => {
-//   onRemoteSay('hello')
-//   onUserSay('how are you')
-//   setTimeout(onTimerOutput, 1000)
-// }
-// onTimerOutput()
 </script>
 
 <style lang="scss" scoped>
