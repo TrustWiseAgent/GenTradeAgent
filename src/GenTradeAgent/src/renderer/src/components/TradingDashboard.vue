@@ -69,7 +69,25 @@ const store = useStore()
 store.watch(
   (state) => state.currentOhlcv,
   (value) => {
+    console.log('change ohlcv')
+    console.log(value)
     candlestickSeries.setData(value)
+  }
+)
+
+store.watch(
+  (state) => state.currentAsset,
+  () => {
+    console.log('change Asset')
+    candlestickSeries.setData(store.state.currentOhlcv)
+  }
+)
+
+store.watch(
+  (state) => state.currentInterval,
+  () => {
+    console.log('change Interval')
+    candlestickSeries.setData(store.state.currentOhlcv)
   }
 )
 

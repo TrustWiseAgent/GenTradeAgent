@@ -97,6 +97,7 @@ store.watch(
 )
 
 const handleUpdateCurrentAsset = (value: string) => {
+  console.log('handleUpdateCurrentAsset:' + value)
   store.commit('updateCurrentAsset', value)
 }
 
@@ -110,6 +111,31 @@ const handlerPingServer = () => {
   setTimeout(handlerPingServer, agentServer.pingInterval)
 }
 handlerPingServer()
+
+let isConnect = false
+const onAssetFromServer = (retval) => {
+  optionsAsset.value.length = 0
+  Object.keys(retval).forEach((item) => {
+    optionsAsset.value.push({
+      label: item,
+      value: item
+    })
+  })
+}
+
+store.watch(
+  (state) => state.serverLatency,
+  (value) => {
+    if (isConnect && value == -1) {
+      isConnect = false
+    }
+
+    if (!isConnect && value != -1) {
+      isConnect = true
+      agentServer.get_assets(onAssetFromServer)
+    }
+  }
+)
 </script>
 
 <style lang="scss" scoped>
