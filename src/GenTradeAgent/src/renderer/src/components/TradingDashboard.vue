@@ -25,13 +25,10 @@ import { onMounted, ref, nextTick } from 'vue'
 import { createChart, IChartApi, TickMarkType } from 'lightweight-charts'
 import { useStore } from '@renderer/store'
 import { NDropdown } from 'naive-ui'
-import { agentServer } from '@renderer/server'
 
 let chartObj: IChartApi | null = null
 let chartElement: HTMLElement | null = null
 let candlestickSeries
-let isConnect = false
-let serverAsset = {}
 
 const contextMenuOptions = [
   {
