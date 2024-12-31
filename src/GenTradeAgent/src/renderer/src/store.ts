@@ -1,5 +1,6 @@
 import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
+import { agentServer } from './server'
 
 export interface ohlcvData {
   time: number
@@ -58,6 +59,7 @@ export const store = createStore<IState>({
     },
     updateOhlcvDB(state, newOhlcvDB) {
       console.log('updateOhlcvDB')
+      console.log(newOhlcvDB)
       state.ohlcvDB = newOhlcvDB
       state.currentAsset = Object.keys(newOhlcvDB)[0]
       state.currentOhlcv = state.ohlcvDB[state.currentAsset][state.currentInterval]
@@ -65,12 +67,30 @@ export const store = createStore<IState>({
     updateCurrentAsset(state, newAsset: string) {
       console.log('updateCurrentAsset')
       state.currentAsset = newAsset
-      state.currentOhlcv = state.ohlcvDB[state.currentAsset][state.currentInterval]
+      if (state.currentAsset in state.ohlcvDB) {
+        state.currentOhlcv = state.ohlcvDB[state.currentAsset][state.currentInterval]
+      }
+      //console.log(state.c)
+      const callback = ((data) => {
+        console.log(data)
+        state.currentOhlcv = data
+        console.log(state.currentOhlcv)
+      })
+      agentServer.get_ohlcv(newAsset, state.currentInterval, callback)
     },
     updateCurrentInterval(state, newInterval: string) {
       console.log('updateCurrentInterval')
       state.currentInterval = newInterval
-      state.currentOhlcv = state.ohlcvDB[state.currentAsset][state.currentInterval]
+      if (state.currentAsset in state.ohlcvDB) {
+        state.currentOhlcv = state.ohlcvDB[state.currentAsset][state.currentInterval]
+        console.log(state.currentOhlcv)
+        console.log("222")
+      }
+      const callback = ((data) => {
+        console.log(data)
+        state.currentOhlcv = data
+      })
+      agentServer.get_ohlcv(state.currentAsset, state.currentInterval, callback)
     },
     updateNotification(state, notifyMessage) {
       state.notifyMessage = notifyMessage

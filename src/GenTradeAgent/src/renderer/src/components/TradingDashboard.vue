@@ -25,10 +25,13 @@ import { onMounted, ref, nextTick } from 'vue'
 import { createChart, IChartApi, TickMarkType } from 'lightweight-charts'
 import { useStore } from '@renderer/store'
 import { NDropdown } from 'naive-ui'
+import { agentServer } from '@renderer/server'
 
 let chartObj: IChartApi | null = null
 let chartElement: HTMLElement | null = null
 let candlestickSeries
+let isConnect = false
+let serverAsset = {}
 
 const contextMenuOptions = [
   {
@@ -69,7 +72,25 @@ const store = useStore()
 store.watch(
   (state) => state.currentOhlcv,
   (value) => {
+    console.log('change ohlcv')
+    console.log(value)
     candlestickSeries.setData(value)
+  }
+)
+
+store.watch(
+  (state) => state.currentAsset,
+  () => {
+    console.log('change Asset')
+    candlestickSeries.setData(store.state.currentOhlcv)
+  }
+)
+
+store.watch(
+  (state) => state.currentInterval,
+  () => {
+    console.log('change Interval')
+    candlestickSeries.setData(store.state.currentOhlcv)
   }
 )
 
