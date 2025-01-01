@@ -79,11 +79,16 @@ const onClickNetwork = () => {
   showServerModal.value = true
 }
 
+const callbackPing = (latency: number) => {
+  store.commit('updateServerConnection', latency)
+}
+
 const onPositiveClick = () => {
   console.log('ok')
   agentServer.serverAddress = serverAddress.value
   agentServer.pingInterval = pingInterval.value * 1000
   showServerModal.value = false
+  agentServer.ping(callbackPing)
 }
 </script>
 <style lang="scss" scoped>

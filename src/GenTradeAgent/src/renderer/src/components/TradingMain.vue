@@ -105,9 +105,12 @@ const handleUpdateCurrentInterval = (value: string) => {
   store.commit('updateCurrentInterval', value)
 }
 
-agentServer.store = useStore()
+const callbackPing = (latency: number) => {
+  store.commit('updateServerConnection', latency)
+}
+
 const handlerPingServer = () => {
-  agentServer.ping()
+  agentServer.ping(callbackPing)
   setTimeout(handlerPingServer, agentServer.pingInterval)
 }
 handlerPingServer()
