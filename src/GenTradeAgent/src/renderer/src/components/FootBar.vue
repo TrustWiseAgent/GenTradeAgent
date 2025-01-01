@@ -28,22 +28,36 @@
     >
       <!-- <template #header-extra> Oops! </template> -->
       <n-space vertical>
-        Address URL
+        <n-space>
+          <n-icon size="24"><Server24Regular /></n-icon>Address URL
+        </n-space>
         <n-input v-model:value="serverAddress"></n-input>
-        API Key
+        <n-space>
+          <n-icon size="24"><Key24Regular /></n-icon>
+          API Key
+        </n-space>
         <n-input v-model:value="apiKey"></n-input>
-        Ping Interval (seconds)
+        <n-space>
+          <n-icon size="24"><NetworkCheck24Regular /></n-icon>
+          Ping Interval (seconds)
+        </n-space>
         <n-input-number v-model:value="pingInterval"></n-input-number>
       </n-space>
       <template #footer>
-        <n-button @click="onPositiveClick">OK</n-button>
+        <n-button @click="onPositiveClick" type="primary">OK</n-button>
       </template>
     </n-modal>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { PlugConnected20Filled, PlugDisconnected20Regular } from '@vicons/fluent'
+import {
+  PlugConnected20Filled,
+  PlugDisconnected20Regular,
+  Server24Regular,
+  Key24Regular,
+  NetworkCheck24Regular
+} from '@vicons/fluent'
 import { NIcon, NSpace, NButton, NModal, NInput, NInputNumber } from 'naive-ui'
 import { useStore } from '../store'
 import { agentServer } from '@renderer/server'
