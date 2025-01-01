@@ -67,6 +67,10 @@ const currentAsset = ref(store.state.currentAsset)
 const currentInterval = ref('1h')
 const optionsInterval = ref([
   {
+    label: '1m',
+    value: '1m'
+  },
+  {
     label: '1h',
     value: '1h'
   },
@@ -95,6 +99,12 @@ store.watch(
     })
   }
 )
+
+const handlerRefresh = () => {
+  store.commit('updateCurrentAsset', currentAsset.value)
+  setTimeout(handlerRefresh, 30000)
+}
+handlerRefresh()
 
 const handleUpdateCurrentAsset = (value: string) => {
   console.log('handleUpdateCurrentAsset:' + value)
