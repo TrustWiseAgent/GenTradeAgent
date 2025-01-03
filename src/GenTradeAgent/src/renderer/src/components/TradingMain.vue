@@ -6,6 +6,17 @@
           <div class="pane-dashboard-title">
             <n-space horizontal size="small">
               <n-select
+                v-model:value="currentMarket"
+                filterable
+                placeholder="Please select a market"
+                :options="optionsMarket"
+                size="tiny"
+                menu-size="tiny"
+                class="title-item"
+                style="width: 100px"
+                @update:value="handleUpdateCurrentMarket"
+              />
+              <n-select
                 v-model:value="currentAsset"
                 filterable
                 placeholder="Please select an asset"
@@ -13,7 +24,7 @@
                 size="tiny"
                 menu-size="tiny"
                 class="title-item"
-                style="width: 200px"
+                style="width: 150px"
                 @update:value="handleUpdateCurrentAsset"
               />
               <n-select
@@ -52,19 +63,39 @@ import { ref } from 'vue'
 
 import TradingDashboard from './TradingDashboard.vue'
 import TradingChatAgent from './TradingChatAgent.vue'
-import { useStore, getMarket } from '../store'
-import { agentServer } from '@renderer/server'
+import { useStore } from '../store'
+import { agentServer, MARKET_CRYPTO } from '@renderer/server'
 
 interface IOption {
   label: string
   value: string
 }
 
+let isConnect = false
+
 const store = useStore()
 
-const optionsAsset = ref<IOption[]>([])
+const lastSelectedMarketId = localStorage.getItem('lastSelectedMarketId')
+if (lastSelectedMarketId) {
+  store.state.currentMarket = lastSelectedMarketId
+}
+
+const lastSelectedAsset = localStorage.getItem('lastSelectedAsset')
+if (lastSelectedAsset) {
+  store.state.currentAsset = lastSelectedAsset
+}
+
+const lastSelectedInterval = localStorage.getItem('lastSelectedInterval')
+if (lastSelectedInterval) {
+  store.state.currentInterval = lastSelectedInterval
+}
+
+const currentMarket = ref(store.state.currentMarket)
 const currentAsset = ref(store.state.currentAsset)
-const currentInterval = ref('1h')
+const currentInterval = ref('1d')
+
+const optionsMarket = ref<IOption[]>([])
+const optionsAsset = ref<IOption[]>([])
 const optionsInterval = ref([
   {
     label: '1m',
@@ -88,31 +119,32 @@ const optionsInterval = ref([
   }
 ])
 
-store.watch(
-  (state) => state.ohlcvDB,
-  (value) => {
-    Object.keys(value).forEach((item) => {
-      optionsAsset.value.push({
-        label: getMarket(store.state, item) + ': ' + item,
-        value: item
-      })
+const updateAssetOptions = (market_id) => {
+  const assertNames = Object.keys(agentServer.markets[market_id].assets)
+  optionsAsset.value.length = 0
+  assertNames.forEach((item) => {
+    optionsAsset.value.push({
+      label: item,
+      value: item
     })
-  }
-)
-
-const handlerRefresh = () => {
-  store.commit('updateCurrentAsset', currentAsset.value)
-  setTimeout(handlerRefresh, 30000)
+  })
+  currentAsset.value = store.state.currentAsset
 }
-handlerRefresh()
+
+const handleUpdateCurrentMarket = (value: string) => {
+  store.commit('updateCurrentMarket', value)
+  localStorage.setItem('lastSelectedMarketId', value)
+  updateAssetOptions(value)
+}
 
 const handleUpdateCurrentAsset = (value: string) => {
-  console.log('handleUpdateCurrentAsset:' + value)
   store.commit('updateCurrentAsset', value)
+  localStorage.setItem('lastSelectedAsset', value)
 }
 
 const handleUpdateCurrentInterval = (value: string) => {
   store.commit('updateCurrentInterval', value)
+  localStorage.setItem('lastSelectedInterval', value)
 }
 
 const callbackPing = (latency: number) => {
@@ -121,20 +153,9 @@ const callbackPing = (latency: number) => {
 
 const handlerPingServer = () => {
   agentServer.ping(callbackPing)
-  setTimeout(handlerPingServer, agentServer.pingInterval)
+  //setTimeout(handlerPingServer, agentServer.pingInterval)
 }
 handlerPingServer()
-
-let isConnect = false
-const onAssetFromServer = (retval) => {
-  optionsAsset.value.length = 0
-  Object.keys(retval).forEach((item) => {
-    optionsAsset.value.push({
-      label: item,
-      value: item
-    })
-  })
-}
 
 store.watch(
   (state) => state.serverLatency,
@@ -145,7 +166,27 @@ store.watch(
 
     if (!isConnect && value != -1) {
       isConnect = true
-      agentServer.get_assets(onAssetFromServer)
+      store.commit('updateNotification', 'Reloading market data...')
+      agentServer.refreshAssets().then(() => {
+        setTimeout(() => {
+          store.commit('updateNotification', 'Reloading market data...Done')
+          // refresh market select UI
+          optionsMarket.value.length = 0
+          Object.keys(agentServer.markets).forEach((index) => {
+            optionsMarket.value.push({ label: agentServer.markets[index].name, value: index })
+          })
+
+          let lastSelectedMarketId = localStorage.getItem('lastSelectedMarketId')
+          if (lastSelectedMarketId == null || !(lastSelectedMarketId in agentServer.markets)) {
+            lastSelectedMarketId = MARKET_CRYPTO
+          }
+          currentMarket.value = agentServer.markets[lastSelectedMarketId].name
+          localStorage.setItem('lastSelectedMarketId', lastSelectedMarketId)
+
+          store.commit('updateCurrentMarket', lastSelectedMarketId)
+          updateAssetOptions(lastSelectedMarketId)
+        }, 500)
+      })
     }
   }
 )

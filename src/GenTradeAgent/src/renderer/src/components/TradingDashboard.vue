@@ -70,7 +70,6 @@ store.watch(
   (state) => state.currentOhlcv,
   (value) => {
     console.log('change ohlcv')
-    console.log(value)
     candlestickSeries.setData(value)
   }
 )
